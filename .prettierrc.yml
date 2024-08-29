@@ -1,0 +1,9 @@
+# https://prettier.io/docs/en/configuration.html
+
+proseWrap: always
+trailingComma: es5
+overrides:
+  # https://github.com/prettier/prettier/issues/15956
+  - files: tsconfig.json
+    options:
+      parser: json

@@ -1,0 +1,46 @@
+{
+  "name": "public-domain-library-book-automation",
+  "type": "module",
+  "engines": {
+    "node": "^22.0.0",
+    "npm": "^10.8.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "start": "ts-node packages/application/src/main.ts",
+    "format": "prettier --cache --write .",
+    "format:check": "prettier --cache --check .",
+    "lint": "eslint --cache --fix .",
+    "lint:check": "eslint --cache .",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.9.1",
+    "@types/node": "^22.5.1",
+    "@typescript-eslint/eslint-plugin": "^8.3.0",
+    "@typescript-eslint/parser": "^8.3.0",
+    "eslint": "^9.9.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0",
+    "husky": "^9.1.5",
+    "lint-staged": "^15.2.9",
+    "prettier": "^3.3.3",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.3.0"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,ts}": [
+      "prettier --write",
+      "eslint"
+    ],
+    "*.{css,xhtml,html,md,json}": [
+      "prettier --write"
+    ]
+  }
+}

@@ -1,8 +1,6 @@
 import { checkFilesystem, getBooks } from "~file-operations";
 import logger from "~logger";
 
-logger.info("Starting application");
-
 async function BookCreationProcess() {
   try {
     checkFilesystem();
@@ -12,4 +10,10 @@ async function BookCreationProcess() {
   }
 }
 
+logger.info("Starting book creation & update process");
+const start = performance.now();
 BookCreationProcess();
+const end = performance.now();
+logger.info(
+  `Book creation & update process finished in ${(end - start).toFixed(2)}ms`
+);

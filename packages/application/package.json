@@ -1,12 +1,14 @@
 {
   "scripts": {
     "start": "ts-node src/main.ts",
+    "dev": "npx nodemon",
     "build": "tsc"
   },
   "devDependencies": {
     "@types/module-alias": "^2.0.4",
     "@types/winston": "^2.4.4",
     "module-alias": "^2.2.3",
+    "nodemon": "^3.1.4",
     "tsconfig-paths": "^4.2.0"
   }
 }

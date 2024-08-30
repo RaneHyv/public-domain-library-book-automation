@@ -10,6 +10,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": true,
     "sourceMap": true,
     "outDir": "./dist",
@@ -19,7 +20,9 @@
     "baseUrl": ".",
     "paths": {
       "~logger": ["src/logger/logger.ts"],
-      "~helpers/*": ["src/helpers/*"]
+      "~helpers": ["src/helpers/index.ts"],
+      "~types": ["src/types/index.ts"],
+      "~file-operations": ["src/file-operations/index.ts"]
     }
   }
 }

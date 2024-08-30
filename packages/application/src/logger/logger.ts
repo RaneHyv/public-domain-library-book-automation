@@ -14,14 +14,15 @@ const SYSLOG_COLORS: Record<string, string> = {
 const logger = createLogger({
   levels: config.syslog.levels,
   format: format.combine(
-    format.timestamp({ format: "DD-MM-YY" }),
+    format.timestamp({ format: "DD-MM-YY HH:mm:ss" }),
     format.errors({ stack: true }),
     format.splat(),
+    format.align(),
     format.printf(({ timestamp, level, message, ...meta }) => {
       const metaString = Object.keys(meta).length
         ? JSON.stringify(meta, null, 2)
         : "";
-      return `[${timestamp}] [${level}]: ${message} ${metaString}`;
+      return `[${timestamp.replace(" ", "] [")}] [${level.toLocaleUpperCase()}]: ${message} ${metaString}`;
     }),
     format.colorize({ all: true, colors: SYSLOG_COLORS })
   ),

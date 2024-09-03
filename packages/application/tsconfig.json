@@ -22,7 +22,8 @@
       "~logger": ["src/logger/logger.ts"],
       "~helpers": ["src/helpers/index.ts"],
       "~types": ["src/types/index.ts"],
-      "~file-operations": ["src/file-operations/index.ts"]
+      "~file-operations": ["src/file-operations/index.ts"],
+      "~constants": ["src/constants/index.ts"]
     }
   }
 }

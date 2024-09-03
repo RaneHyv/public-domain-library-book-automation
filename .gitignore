@@ -132,6 +132,7 @@ dist
 # Books
 books
 git-book-sources
+book-distrobution
 
 #Assets
 public-domain-library-assets

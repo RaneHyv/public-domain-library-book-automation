@@ -51,10 +51,14 @@ export async function getBookConfigs(): Promise<BookConfigs> {
       const srcFolders = cleanBookSrc(folderPath);
       const { github } = readBookCofigFile(folderPath) || {};
       if (github) {
+        const creationAssetsFolder = path.join(folderPath, "creation-assets");
+
         bookConfigs.push({
           folderPath,
           gitFolderPath,
           github,
+          creationAssetsFolder,
+          name: item,
           ...srcFolders,
         });
       }

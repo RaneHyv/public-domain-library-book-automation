@@ -17,7 +17,6 @@ const logger = createLogger({
     format.timestamp({ format: "DD-MM-YY HH:mm:ss" }),
     format.errors({ stack: true }),
     format.splat(),
-    format.align(),
     format.printf(({ timestamp, level, message, ...meta }) => {
       const metaString = Object.keys(meta).length
         ? JSON.stringify(meta, null, 2)

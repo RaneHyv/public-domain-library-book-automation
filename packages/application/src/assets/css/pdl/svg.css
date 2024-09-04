@@ -1,0 +1,8 @@
+@charset "utf-8";
+@namespace epub "http://www.idpf.org/2007/ops";
+
+@media all and (prefers-color-scheme: dark) {
+  img {
+    filter: invert(100%);
+  }
+}

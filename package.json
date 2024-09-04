@@ -9,7 +9,7 @@
     "packages/*"
   ],
   "scripts": {
-    "start": "ts-node packages/application/src/main.ts",
+    "start": "cd packages/application && npm run start",
     "format": "prettier --cache --write .",
     "format:check": "prettier --cache --check .",
     "lint": "eslint --cache --fix .",

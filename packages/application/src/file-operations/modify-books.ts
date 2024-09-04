@@ -2,20 +2,22 @@ import {
   addAssets,
   modifyContent,
   modifyCoreCss,
+  modifyPublicDomainPageContent,
   modifyToc,
   removeAssets,
 } from "~file-operations";
 import { BookConfigs } from "~types";
 
-export function modifyBooks(bookConfigs: BookConfigs): void {
-  for (const { azw3, epub, kepub, creationAssetsFolder } of bookConfigs) {
-    const azw3SrcPath = `${azw3}/src/epub`;
-    const epubSrcPath = `${epub}/src/epub`;
-    const kepubSrcPath = `${kepub}/src/epub`;
+export async function modifyBooks(bookConfigs: BookConfigs): Promise<void> {
+  for (const config of bookConfigs) {
+    const { azw3, epub, kepub, creationAssetsFolder } = config;
+    const azw3SrcPath = `${azw3}/epub`;
+    const epubSrcPath = `${epub}/epub`;
+    const kepubSrcPath = `${kepub}/epub`;
 
     removeAssets(azw3SrcPath, epubSrcPath, kepubSrcPath);
     addAssets(azw3SrcPath, epubSrcPath, kepubSrcPath, creationAssetsFolder);
-    modifyContent({
+    await modifyContent({
       epub: epubSrcPath,
       kepub: kepubSrcPath,
       azw3: azw3SrcPath,
@@ -27,6 +29,12 @@ export function modifyBooks(bookConfigs: BookConfigs): void {
       azw3: azw3SrcPath,
     });
 
-    modifyToc({ epub: epubSrcPath, kepub: kepubSrcPath, azw3: azw3SrcPath });
+    await modifyToc({
+      epub: epubSrcPath,
+      kepub: kepubSrcPath,
+      azw3: azw3SrcPath,
+    });
+
+    await modifyPublicDomainPageContent(config);
   }
 }

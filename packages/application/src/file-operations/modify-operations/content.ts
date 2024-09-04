@@ -8,10 +8,15 @@ import {
   REMOVED_ITEM_ID_REFS,
 } from "~constants";
 import { readFile, writeFile } from "~file-operations";
+import { pretifyData } from "~helpers";
 import type { BookModificationInfo } from "~types";
 
-function adjustContentFile(contentOpf: string): string {
-  const $ = cheerio.load(contentOpf, { xmlMode: true });
+const removeSingleEmptyLines = (content: string): string => {
+  return content.replace(/^\s*[\r\n]/gmu, "");
+};
+
+async function adjustContentFile(contentOpf: string): Promise<string> {
+  const $ = cheerio.load(contentOpf, { xml: true });
   const manifest = $("manifest");
   const spine = $("spine");
 
@@ -36,26 +41,27 @@ function adjustContentFile(contentOpf: string): string {
   spine.prepend(ADDED_ITEM_REFS_FRONT);
   spine.append(ADDED_ITEM_REFS_BACK);
 
-  // manifest
-  //   .contents()
-  //   .filter(function () {
-  //     return this.type === "text" && !/\S/u.test(this.nodeValue);
-  //   })
-  //   .remove();
+  const manifestHtml = $.html("manifest");
+  const spineHtml = $.html("spine");
 
-  // spine.contents().filter(function () {
-  //   return this.type === "text" && !/\S/u.test(this.nodeValue);
-  // });
+  const formattedManifestHtml = await pretifyData(manifestHtml, "xml");
+  const formattedSpineHtml = await pretifyData(spineHtml, "xml");
+  $("manifest").replaceWith(formattedManifestHtml);
+  $("spine").replaceWith(formattedSpineHtml);
 
-  return $.html();
+  const html = $.html();
+
+  return removeSingleEmptyLines(html);
 }
 
-export function modifyContent(modInfo: BookModificationInfo): void {
+export async function modifyContent(
+  modInfo: BookModificationInfo
+): Promise<void> {
   for (const path of Object.values(modInfo)) {
     const contentOpfPath = `${path}/content.opf`;
     if (path && fs.existsSync(contentOpfPath)) {
       const opfData = readFile(contentOpfPath);
-      const newOpf = adjustContentFile(opfData);
+      const newOpf = await adjustContentFile(opfData);
       writeFile(contentOpfPath, newOpf);
     }
   }

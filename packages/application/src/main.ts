@@ -12,7 +12,7 @@ async function BookCreationProcess() {
   try {
     checkFilesystem();
     const bookConfigs = await getBooks();
-    modifyBooks(bookConfigs);
+    await modifyBooks(bookConfigs);
     await epubBuild(bookConfigs);
   } catch (error: unknown) {
     logger.error((error as Error).message);

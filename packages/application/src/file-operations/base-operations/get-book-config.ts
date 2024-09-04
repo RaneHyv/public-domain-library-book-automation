@@ -35,6 +35,22 @@ function readBookCofigFile(
     return;
   }
 
+  if (!config.publicDomaiPageTitle) {
+    logger.error(
+      `The 'publicDomaiPageTitle' key is missing in the config file: ${configPath}`
+    );
+
+    return;
+  }
+
+  if (!config.publicDomaiPageContent) {
+    logger.error(
+      `The 'publicDomaiPageContent' key is missing in the config file: ${configPath}`
+    );
+
+    return;
+  }
+
   return config;
 }
 
@@ -49,8 +65,10 @@ export async function getBookConfigs(): Promise<BookConfigs> {
     const gitFolderPath = path.join(gitBaseDir, item);
     if (fs.statSync(folderPath).isDirectory()) {
       const srcFolders = cleanBookSrc(folderPath);
-      const { github } = readBookCofigFile(folderPath) || {};
-      if (github) {
+      const { github, publicDomaiPageTitle, publicDomaiPageContent } =
+        readBookCofigFile(folderPath) || {};
+
+      if (github && publicDomaiPageTitle && publicDomaiPageContent) {
         const creationAssetsFolder = path.join(folderPath, "creation-assets");
 
         bookConfigs.push({
@@ -59,6 +77,8 @@ export async function getBookConfigs(): Promise<BookConfigs> {
           github,
           creationAssetsFolder,
           name: item,
+          publicDomaiPageTitle,
+          publicDomaiPageContent,
           ...srcFolders,
         });
       }

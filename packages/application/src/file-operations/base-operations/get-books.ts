@@ -7,7 +7,7 @@ export async function getBooks(): Promise<BookConfigs> {
   for (const { github, gitFolderPath, azw3, epub, kepub } of bookConfigs) {
     await pullBookSources(gitFolderPath, github);
     for (const file of [azw3, epub, kepub]) {
-      await copyFiles(`${gitFolderPath}/src`, file);
+      await copyFiles(`${gitFolderPath}/src/*`, file);
     }
   }
 

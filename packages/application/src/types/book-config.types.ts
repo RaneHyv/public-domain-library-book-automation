@@ -1,4 +1,4 @@
-export type BookConfigs = {
+export interface BookConfig {
   github: string;
   folderPath: string;
   creationAssetsFolder: string;
@@ -7,7 +7,11 @@ export type BookConfigs = {
   epub: string;
   kepub: string;
   name: string;
-}[];
+  publicDomaiPageTitle: string;
+  publicDomaiPageContent: string;
+}
+
+export type BookConfigs = BookConfig[];
 
 export type BookTypes = "azw3" | "epub" | "kepub";
 export type BookModificationInfo = Record<BookTypes, string>;

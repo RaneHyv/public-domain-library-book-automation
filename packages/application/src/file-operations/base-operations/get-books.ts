@@ -1,15 +1,20 @@
-import { copyFiles, getBookConfigs } from "~file-operations";
+import { copyFiles, setupBookSrc } from "~file-operations";
 import { pullBookSources } from "~helpers";
-import { BookConfigs } from "~types";
+import type { Book, BookFolders } from "~types";
 
-export async function getBooks(): Promise<BookConfigs> {
-  const bookConfigs = await getBookConfigs();
-  for (const { github, gitFolderPath, azw3, epub, kepub } of bookConfigs) {
-    await pullBookSources(gitFolderPath, github);
-    for (const file of [azw3, epub, kepub]) {
-      await copyFiles(`${gitFolderPath}/src/*`, file);
-    }
+export async function getBooks(
+  book: Book,
+  bookFileName: string
+): Promise<BookFolders> {
+  const { "StandardEbooks Github": github } = book;
+
+  const bookPaths = setupBookSrc(bookFileName);
+  const { azw3, epub, kepub, git } = bookPaths;
+
+  await pullBookSources(git, github);
+  for (const file of [azw3, epub, kepub]) {
+    await copyFiles(`${git}/src/*`, file);
   }
 
-  return bookConfigs;
+  return bookPaths;
 }

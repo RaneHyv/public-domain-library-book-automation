@@ -9,7 +9,7 @@ import {
 } from "~constants";
 import { readFile, writeFile } from "~file-operations";
 import { pretifyData } from "~helpers";
-import type { BookModificationInfo } from "~types";
+import type { ModificationFolders } from "~types";
 
 const removeSingleEmptyLines = (content: string): string => {
   return content.replace(/^\s*[\r\n]/gmu, "");
@@ -55,7 +55,7 @@ async function adjustContentFile(contentOpf: string): Promise<string> {
 }
 
 export async function modifyContent(
-  modInfo: BookModificationInfo
+  modInfo: ModificationFolders
 ): Promise<void> {
   for (const path of Object.values(modInfo)) {
     const contentOpfPath = `${path}/content.opf`;

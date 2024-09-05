@@ -3,7 +3,7 @@ import * as fs from "fs";
 import { TOC_BACK_ADDITIONS, TOC_FRONT_ADDITIONS } from "~constants";
 import { readFile, writeFile } from "~file-operations";
 import { pretifyData } from "~helpers";
-import type { BookModificationInfo } from "~types";
+import type { ModificationFolders } from "~types";
 
 async function swapTocContent(tocXhtml: string): Promise<string> {
   const $ = cheerio.load(tocXhtml, { xml: true });
@@ -30,7 +30,7 @@ async function swapTocContent(tocXhtml: string): Promise<string> {
   return pretifyData(html, "html");
 }
 
-export async function modifyToc(modInfo: BookModificationInfo): Promise<void> {
+export async function modifyToc(modInfo: ModificationFolders): Promise<void> {
   for (const path of Object.values(modInfo)) {
     const tocXhtmlPath = `${path}/toc.xhtml`;
     if (path && fs.existsSync(tocXhtmlPath)) {

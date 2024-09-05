@@ -1,7 +1,7 @@
 import * as fs from "node:fs";
 import { CHAPTER_MODIFICATION } from "~constants";
 import { readFile, writeFile } from "~file-operations";
-import type { BookModificationInfo } from "~types";
+import type { ModificationFolders } from "~types";
 
 function removeDarkModeMediaQuery(css: string): string {
   const regex = /@media\s+all\s+and\s+\(prefers-color-scheme:\s+dark\)\s*\{/giu;
@@ -37,7 +37,7 @@ function removeDarkModeMediaQuery(css: string): string {
   return modifiedCss;
 }
 
-export function modifyCoreCss(modInfo: BookModificationInfo): void {
+export function modifyCoreCss(modInfo: ModificationFolders): void {
   for (const [type, path] of Object.entries(modInfo)) {
     const coreCssPath = `${path}/css/core.css`;
     if (path && fs.existsSync(coreCssPath)) {

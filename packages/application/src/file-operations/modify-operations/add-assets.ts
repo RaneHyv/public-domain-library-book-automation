@@ -1,13 +1,17 @@
 import * as fse from "fs-extra";
 import * as fs from "node:fs";
-import { PUBLIC_DOMAIN_LIBRARY_ASSETS_FOLDER_PATH } from "~file-operations";
+import { PUBLIC_DOMAIN_LIBRARY_ASSETS_FOLDER_PATH } from "~constants";
+import logger from "~logger";
+import type { Book } from "~types";
 
 export function addAssets(
   azw3: string,
   epub: string,
   kepub: string,
-  creationAssetsFolder: string
+  creationAssetsFolder: string,
+  book: Book
 ): void {
+  const { Title, ID } = book || {};
   const assetFolders = ["text", "images", "fonts", "css"];
 
   assetFolders.forEach((folder) => {
@@ -22,8 +26,7 @@ export function addAssets(
       fse.copySync(sourcePath, kepubPath, { overwrite: true });
     } else {
       throw new Error(
-        `The '${folder}' folder was missing in the '${PUBLIC_DOMAIN_LIBRARY_ASSETS_FOLDER_PATH}' folder. ` +
-          `Please add the '${folder}' folder to this folder.`
+        `The '${folder}' common folder is missing in the public domain library assets.`
       );
     }
   });
@@ -41,9 +44,8 @@ export function addAssets(
       fse.copySync(sourcePath, epubPath, { overwrite: true });
       fse.copySync(sourcePath, kepubPath, { overwrite: true });
     } else {
-      throw new Error(
-        `The '${folder}' folder was missing in the '${creationAssetsFolder}' folder. ` +
-          `Please add the '${folder}' folder to this folder.`
+      logger.warning(
+        `The '${folder}' folder was missing in the book ${Title} (${ID})`
       );
     }
   });

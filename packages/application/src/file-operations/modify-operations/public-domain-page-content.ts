@@ -1,13 +1,17 @@
 import * as cheerio from "cheerio";
 import { readFile, writeFile } from "~file-operations";
 import { pretifyData } from "~helpers";
-import { BookConfig } from "~types";
+import { Book, BookFolders } from "~types";
 
 export async function modifyPublicDomainPageContent(
-  bookConfigs: BookConfig
+  book: Book,
+  bookConfigs: BookFolders
 ): Promise<void> {
-  const { azw3, epub, kepub, publicDomaiPageTitle, publicDomaiPageContent } =
-    bookConfigs;
+  const { azw3, epub, kepub } = bookConfigs;
+  const {
+    "PD - Title": publicDomaiPageTitle,
+    "PD - Text": publicDomaiPageContent,
+  } = book;
 
   for (const srcPath of [azw3, epub, kepub]) {
     const path = `${srcPath}/epub/text/public-domain.xhtml`;

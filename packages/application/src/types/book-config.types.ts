@@ -1,17 +1,25 @@
-export interface BookConfig {
-  github: string;
-  folderPath: string;
-  creationAssetsFolder: string;
-  gitFolderPath: string;
-  azw3: string;
-  epub: string;
-  kepub: string;
-  name: string;
-  publicDomaiPageTitle: string;
-  publicDomaiPageContent: string;
-}
+export type BookConfigFileKeys =
+  | "Author(s)"
+  | "ID"
+  | "Lang"
+  | "PD - Text"
+  | "PD - Title"
+  | "PDL Author"
+  | "PDL book"
+  | "StandardEbooks Github"
+  | "Title"
+  | "Translator(s)";
 
-export type BookConfigs = BookConfig[];
+export type Book = Record<BookConfigFileKeys, string>;
+
+export type Books = Book[];
 
 export type BookTypes = "azw3" | "epub" | "kepub";
-export type BookModificationInfo = Record<BookTypes, string>;
+
+export type ModificationFolders = Record<BookTypes, string>;
+
+export interface BookFolders extends Record<BookTypes, string> {
+  base: string;
+  assets: string;
+  git: string;
+}

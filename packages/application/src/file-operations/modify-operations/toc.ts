@@ -17,7 +17,7 @@ async function swapTocContent(
     nav = $("nav").first().attr("id", "toc");
   }
 
-  const ol = nav.find("ol");
+  const ol = nav.find("ol").first();
 
   ol.children("li").slice(0, 2).remove();
   ol.children("li").slice(-2).remove();

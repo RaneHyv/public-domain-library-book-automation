@@ -1,4 +1,5 @@
 import * as fs from "node:fs";
+import { KEPUB_IMG_SETTINGS } from "~constants";
 import { readFile, writeFile } from "~file-operations";
 
 function checkAndRead(path: string): string | undefined {
@@ -29,6 +30,7 @@ function swapToOtfFont(path: string, data: string): void {
 
 export function modifyKepubCss(path: string): void {
   // const svgCssPath = `${path}/css/pdl/svg.css`;
+  const coverCssPath = `${path}/css/pdl/cover.css`;
   const publicDomainCssPath = `${path}/css/pdl/public-domain.css`;
   const donateCssPath = `${path}/css/pdl/donate.css`;
   const acknowledgmentsCssPath = `${path}/css/pdl/acknowledgments.css`;
@@ -52,5 +54,9 @@ export function modifyKepubCss(path: string): void {
 
   if (acknowledgmentsCss) {
     swapToOtfFont(acknowledgmentsCssPath, acknowledgmentsCss);
+  }
+
+  if (fs.existsSync(coverCssPath)) {
+    writeFile(coverCssPath, KEPUB_IMG_SETTINGS);
   }
 }

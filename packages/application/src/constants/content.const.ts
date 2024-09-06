@@ -16,7 +16,6 @@ export const REMOVED_ITEM_ID_REFS = [
 ] as const;
 
 export const ADDED_ITEMS = `
-  <item href="css/pdl/cover.css" id="pdl-cover.css" media-type="text/css"/>
   <item href="css/pdl/donate.css" id="pdl-donate.css" media-type="text/css"/>
   <item href="css/pdl/acknowledgments.css" id="pdl-acknowledgments.css" media-type="text/css"/>
   <item href="css/pdl/svg.css" id="pdl-svg.css" media-type="text/css"/>

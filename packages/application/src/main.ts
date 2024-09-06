@@ -3,6 +3,7 @@ import {
   epubBuild,
   getBookConfigs,
   getBooks,
+  kepubBuild,
   modifyBooks,
 } from "~file-operations";
 import { createBookFileName } from "~helpers";
@@ -18,6 +19,7 @@ async function processBook(book: Book) {
     const bookPaths = await getBooks(book, bookFileName);
     await modifyBooks(book, bookPaths, bookFileName);
     await epubBuild(bookPaths.epub, bookFileName, ID);
+    await kepubBuild(bookPaths.kepub, bookFileName, ID);
   } catch (error: unknown) {
     logger.error(`${(error as Error).message}`, { ID: book.ID });
   }

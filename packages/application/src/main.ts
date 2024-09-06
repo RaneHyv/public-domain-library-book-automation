@@ -1,4 +1,5 @@
 import {
+  azw3Build,
   checkFilesystem,
   epubBuild,
   getBookConfigs,
@@ -18,8 +19,11 @@ async function processBook(book: Book) {
     const bookFileName = createBookFileName(title, author, ID);
     const bookPaths = await getBooks(book, bookFileName);
     await modifyBooks(book, bookPaths, bookFileName);
-    await epubBuild(bookPaths.epub, bookFileName, ID);
-    await kepubBuild(bookPaths.kepub, bookFileName, ID);
+    await Promise.all([
+      epubBuild(bookPaths.epub, bookFileName, ID),
+      kepubBuild(bookPaths.kepub, bookFileName, ID),
+      azw3Build(bookPaths.azw3, bookFileName, ID),
+    ]);
   } catch (error: unknown) {
     logger.error(`${(error as Error).message}`, { ID: book.ID });
   }
@@ -37,8 +41,12 @@ async function BookCreationProcess() {
     logger.error((error as Error).message, { ID: GENERAL_TAG });
   }
   const end = performance.now();
+
   logger.info(
-    `Book creation & update process finished in ${((end - start) / 1000).toFixed(2)}s`
+    `Book creation & update process finished in ${(
+      (end - start) /
+      60000
+    ).toFixed(2)} minutes (${((end - start) / 1000).toFixed(2)}s)`
   );
 }
 

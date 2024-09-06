@@ -1,4 +1,4 @@
-export const KEPUB_IMG_SETTINGS = `
+export const ALT_IMG_SETTINGS = `
   img {
     display: block;
     margin-right: auto;

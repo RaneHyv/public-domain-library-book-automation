@@ -26,6 +26,6 @@ export async function kepubBuild(
 
     logger.notice(`The '${ebook}' file was created successfully.`, { ID });
   } catch (error) {
-    logger.error(`The '${name}' epub file failed to build.`, { error });
+    logger.error(`The '${name}' kepub file failed to build.`, { error });
   }
 }

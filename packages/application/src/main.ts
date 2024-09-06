@@ -1,3 +1,4 @@
+import { exec } from "node:child_process";
 import {
   azw3Build,
   checkFilesystem,
@@ -48,6 +49,8 @@ async function BookCreationProcess() {
       60000
     ).toFixed(2)} minutes (${((end - start) / 1000).toFixed(2)}s)`
   );
+
+  exec('say "Book creation completed"');
 }
 
 BookCreationProcess();

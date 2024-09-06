@@ -38,9 +38,11 @@ function getContent(
   contentItems +=
     source === "epub" ? CONTENT_ITEMS_WOFF_FONTS : CONTENT_ITEMS_OTF_FONTS;
 
-  if (addCover) {
+  if (addCover && source !== "azw3") {
     contentItems += CONTENT_ITEMS_COVER;
     contentItemRefs += CONTENT_ITEM_REFS_COVER;
+  } else if (addCover && source === "azw3") {
+    contentItems += CONTENT_ITEMS_COVER;
   }
 
   if (addTitlePage) {
@@ -82,9 +84,9 @@ function removeUnnecesaryFiles(
   addCover: boolean,
   addTitlePage: boolean,
   addPublicDomain: boolean,
-  epub: boolean
+  source: BookTypes
 ): void {
-  if (epub) {
+  if (source === "epub") {
     fs.rmSync(`${path}/fonts/TASAOrbiterText-Regular.otf`, { force: true });
   } else {
     fs.rmSync(`${path}/fonts/TASAOrbiterVF.woff2`, { force: true });
@@ -130,13 +132,7 @@ export function checkAddablePages(
       source
     );
 
-    removeUnnecesaryFiles(
-      path,
-      addCover,
-      addTitle,
-      addPublicDomain,
-      source === "epub"
-    );
+    removeUnnecesaryFiles(path, addCover, addTitle, addPublicDomain, source);
 
     AddablePages[source as BookTypes] = {
       toc,

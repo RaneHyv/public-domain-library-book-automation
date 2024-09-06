@@ -1,6 +1,7 @@
 import {
   addAssets,
   checkAddablePages,
+  modifyAzw3Css,
   modifyContent,
   modifyCoreCss,
   modifyKepubCss,
@@ -54,4 +55,5 @@ export async function modifyBooks(
 
   await modifyPublicDomainPageContent(book, BookPaths);
   modifyKepubCss(kepubSrcPath);
+  modifyAzw3Css(azw3SrcPath);
 }

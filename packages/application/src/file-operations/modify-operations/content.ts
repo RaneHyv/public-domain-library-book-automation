@@ -3,19 +3,23 @@ import * as fs from "fs";
 import {
   ADDED_ITEMS,
   ADDED_ITEM_REFS_BACK,
-  ADDED_ITEM_REFS_FRONT,
   REMOVED_ITEMS_IDS,
   REMOVED_ITEM_ID_REFS,
 } from "~constants";
 import { readFile, writeFile } from "~file-operations";
 import { pretifyData } from "~helpers";
-import type { ModificationFolders } from "~types";
+import type { AvailablePage, BookTypes, ModificationFolders } from "~types";
+import type { AddablePages } from "./index";
 
-const removeSingleEmptyLines = (content: string): string => {
+function removeSingleEmptyLines(content: string): string {
   return content.replace(/^\s*[\r\n]/gmu, "");
-};
+}
 
-async function adjustContentFile(contentOpf: string): Promise<string> {
+async function adjustContentFile(
+  contentOpf: string,
+  addablePage: AvailablePage
+): Promise<string> {
+  const { contentItemRefs, contentItems } = addablePage;
   const $ = cheerio.load(contentOpf, { xml: true });
   const manifest = $("manifest");
   const spine = $("spine");
@@ -37,8 +41,8 @@ async function adjustContentFile(contentOpf: string): Promise<string> {
     }
   }
 
-  manifest.append(ADDED_ITEMS);
-  spine.prepend(ADDED_ITEM_REFS_FRONT);
+  manifest.append(`${ADDED_ITEMS} ${contentItems}`);
+  spine.prepend(contentItemRefs);
   spine.append(ADDED_ITEM_REFS_BACK);
 
   const manifestHtml = $.html("manifest");
@@ -55,13 +59,17 @@ async function adjustContentFile(contentOpf: string): Promise<string> {
 }
 
 export async function modifyContent(
-  modInfo: ModificationFolders
+  modInfo: ModificationFolders,
+  addablePages: AddablePages
 ): Promise<void> {
-  for (const path of Object.values(modInfo)) {
+  for (const [source, path] of Object.entries(modInfo) as [
+    BookTypes,
+    string,
+  ][]) {
     const contentOpfPath = `${path}/content.opf`;
     if (path && fs.existsSync(contentOpfPath)) {
       const opfData = readFile(contentOpfPath);
-      const newOpf = await adjustContentFile(opfData);
+      const newOpf = await adjustContentFile(opfData, addablePages[source]);
       writeFile(contentOpfPath, newOpf);
     }
   }

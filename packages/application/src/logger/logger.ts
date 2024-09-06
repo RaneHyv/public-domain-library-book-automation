@@ -18,10 +18,11 @@ const logger = createLogger({
     format.errors({ stack: true }),
     format.splat(),
     format.printf(({ timestamp, level, message, ...meta }) => {
-      const metaString = Object.keys(meta).length
-        ? JSON.stringify(meta, null, 2)
-        : "";
-      return `[${timestamp.replace(" ", "] [")}] [${level.toLocaleUpperCase()}]: ${message} ${metaString}`;
+      return `[${timestamp.replace(" ", "] [")}] ${
+        meta.ID ? `[${meta.ID}] ` : ""
+      }[${level.toLocaleUpperCase()}]: ${message} ${
+        meta && meta.error ? meta.error : ""
+      }`;
     }),
     format.colorize({ all: true, colors: SYSLOG_COLORS })
   ),

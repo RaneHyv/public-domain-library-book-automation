@@ -9,15 +9,17 @@ import { createBookFileName } from "~helpers";
 import logger from "~logger";
 import type { Book } from "~types";
 
+const GENERAL_TAG = "General" as const;
+
 async function processBook(book: Book) {
   try {
-    const { Title: title, "Author(s)": author } = book;
-    const bookFileName = createBookFileName(title, author);
+    const { Title: title, "Author(s)": author, ID } = book;
+    const bookFileName = createBookFileName(title, author, ID);
     const bookPaths = await getBooks(book, bookFileName);
-    await modifyBooks(book, bookPaths);
-    await epubBuild(bookPaths.epub, bookFileName);
+    await modifyBooks(book, bookPaths, bookFileName);
+    await epubBuild(bookPaths.epub, bookFileName, ID);
   } catch (error: unknown) {
-    logger.error(`[${book.ID}] [${book.Title}] ${(error as Error).message}`);
+    logger.error(`${(error as Error).message}`, { ID: book.ID });
   }
 }
 
@@ -30,11 +32,11 @@ async function BookCreationProcess() {
     const books = getBookConfigs();
     await Promise.all(books.map((book) => processBook(book)));
   } catch (error: unknown) {
-    logger.error((error as Error).message);
+    logger.error((error as Error).message, { ID: GENERAL_TAG });
   }
   const end = performance.now();
   logger.info(
-    `Book creation & update process finished in ${(end - start).toFixed(2)}ms`
+    `Book creation & update process finished in ${((end - start) / 1000).toFixed(2)}s`
   );
 }
 

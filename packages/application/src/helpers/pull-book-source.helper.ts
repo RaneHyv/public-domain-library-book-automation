@@ -10,11 +10,8 @@ export async function pullBookSources(
   }
 
   if (fs.existsSync(gitFolderPath)) {
-    const files = fs.readdirSync(gitFolderPath);
-    if (files.length > 0) {
-      await runCommand(`git -C ${gitFolderPath} pull`);
-    }
-  } else {
-    await runCommand(`git clone ${github} ${gitFolderPath}`);
+    await runCommand(`rm -rf ${gitFolderPath}`);
   }
+
+  await runCommand(`git clone ${github} ${gitFolderPath}`);
 }

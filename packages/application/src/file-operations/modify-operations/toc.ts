@@ -1,11 +1,16 @@
 import * as cheerio from "cheerio";
 import * as fs from "fs";
-import { TOC_BACK_ADDITIONS, TOC_FRONT_ADDITIONS } from "~constants";
+import { TOC_BACK_ADDITIONS } from "~constants";
 import { readFile, writeFile } from "~file-operations";
 import { pretifyData } from "~helpers";
-import type { ModificationFolders } from "~types";
+import type { AvailablePage, BookTypes, ModificationFolders } from "~types";
+import type { AddablePages } from "./index";
 
-async function swapTocContent(tocXhtml: string): Promise<string> {
+async function swapTocContent(
+  tocXhtml: string,
+  addablePage: AvailablePage
+): Promise<string> {
+  const { toc } = addablePage;
   const $ = cheerio.load(tocXhtml, { xml: true });
   let nav = $("nav#toc");
   if (nav.length === 0) {
@@ -16,7 +21,11 @@ async function swapTocContent(tocXhtml: string): Promise<string> {
 
   ol.children("li").slice(0, 2).remove();
   ol.children("li").slice(-2).remove();
-  ol.prepend(TOC_FRONT_ADDITIONS.trim());
+
+  if (toc) {
+    ol.prepend(toc.trim());
+  }
+
   ol.append(TOC_BACK_ADDITIONS.trim());
 
   ol.contents()
@@ -30,12 +39,18 @@ async function swapTocContent(tocXhtml: string): Promise<string> {
   return pretifyData(html, "html");
 }
 
-export async function modifyToc(modInfo: ModificationFolders): Promise<void> {
-  for (const path of Object.values(modInfo)) {
+export async function modifyToc(
+  modInfo: ModificationFolders,
+  addablePages: AddablePages
+): Promise<void> {
+  for (const [source, path] of Object.entries(modInfo) as [
+    BookTypes,
+    string,
+  ][]) {
     const tocXhtmlPath = `${path}/toc.xhtml`;
     if (path && fs.existsSync(tocXhtmlPath)) {
       const xhtmlData = readFile(tocXhtmlPath);
-      const newToc = await swapTocContent(xhtmlData);
+      const newToc = await swapTocContent(xhtmlData, addablePages[source]);
       writeFile(tocXhtmlPath, newToc);
     }
   }

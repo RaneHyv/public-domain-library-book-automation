@@ -1,14 +1,15 @@
-import * as _ from "lodash";
+import { snakeCase } from "lodash";
 
 export function createBookFileName(
   title: string | undefined,
-  author: string | undefined
+  author: string | undefined,
+  ID: string | undefined
 ): string {
-  if (!title || !author) {
+  if (!title || !author || !ID) {
     throw new Error(
-      "The title and author are required to create the book file name."
+      "The title & author or ID are required to create the book file name."
     );
   }
 
-  return _.snakeCase(`${title} ${author}`);
+  return snakeCase(`${ID || ""} ${title || ""} ${author || ""}`);
 }

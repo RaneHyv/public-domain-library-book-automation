@@ -3,6 +3,7 @@ import {
   checkAddablePages,
   modifyContent,
   modifyCoreCss,
+  modifyKepubCss,
   modifyPublicDomainPageContent,
   modifyToc,
   removeAssets,
@@ -52,4 +53,5 @@ export async function modifyBooks(
   );
 
   await modifyPublicDomainPageContent(book, BookPaths);
+  modifyKepubCss(kepubSrcPath);
 }

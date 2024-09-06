@@ -27,9 +27,6 @@ export const ADDED_ITEMS = `
   <item href="images/pdl-orange-logo-v2.svg" id="pdl-orange-logo-v2.svg" media-type="image/svg+xml"/>
   <item href="text/donate.xhtml" id="donate.xhtml" media-type="application/xhtml+xml"/>
   <item href="text/acknowledgments.xhtml" id="acknowledgments.xhtml" media-type="application/xhtml+xml"/>
-  <item href="fonts/LeagueGothic-Regular.ttf" id="LeagueGothic-Regular.ttf" media-type="font/ttf"/>
-  <item href="fonts/TASAOrbiterVF.woff2" id="TASAOrbiterVF.woff2" media-type="font/woff2"/>
-  <item href="fonts/TASAOrbiterText-Regular.otf" id="TASAOrbiterText-Regular.otf" media-type="font/otf"/>
 ` as const;
 
 export const ADDED_ITEM_REFS_BACK = `
@@ -61,4 +58,14 @@ export const CONTENT_ITEMS_TITLE_PAGE = `
   <item href="css/pdl/titlepage.css" id="pdl-titlepage.css" media-type="text/css"/>
   <item href="text/titlepage.xhtml" id="titlepage.xhtml" media-type="application/xhtml+xml"/>
   <item href="images/pdl-title.svg" id="pdl-title.svg" media-type="image/svg+xml"/>
+` as const;
+
+export const CONTENT_ITEMS_OTF_FONTS = `
+  <item href="fonts/LeagueGothic-Regular.ttf" id="LeagueGothic-Regular.ttf" media-type="font/ttf"/>
+  <item href="fonts/TASAOrbiterText-Regular.otf" id="TASAOrbiterText-Regular.otf" media-type="font/otf"/>
+` as const;
+
+export const CONTENT_ITEMS_WOFF_FONTS = `
+  <item href="fonts/LeagueGothic-Regular.ttf" id="LeagueGothic-Regular.ttf" media-type="font/ttf"/>
+  <item href="fonts/TASAOrbiterVF.woff2" id="TASAOrbiterVF.woff2" media-type="font/woff2"/>
 ` as const;

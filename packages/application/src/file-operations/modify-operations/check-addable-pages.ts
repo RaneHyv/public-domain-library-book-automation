@@ -1,8 +1,10 @@
 import * as fs from "fs";
 import {
   CONTENT_ITEMS_COVER,
+  CONTENT_ITEMS_OTF_FONTS,
   CONTENT_ITEMS_PUBLIC_DOMAIN,
   CONTENT_ITEMS_TITLE_PAGE,
+  CONTENT_ITEMS_WOFF_FONTS,
   CONTENT_ITEM_REFS_COVER,
   CONTENT_ITEM_REFS_PUBLIC_DOMAIN,
   CONTENT_ITEM_REFS_TITLE_PAGE,
@@ -24,13 +26,17 @@ export type AddablePages = Record<BookTypes, AvailablePage>;
 function getContent(
   addPublicDomain: boolean,
   addCover: boolean,
-  addTitlePage: boolean
+  addTitlePage: boolean,
+  source: BookTypes
 ): {
   contentItems: string;
   contentItemRefs: string;
 } {
   let contentItems = "";
   let contentItemRefs = "";
+
+  contentItems +=
+    source === "epub" ? CONTENT_ITEMS_WOFF_FONTS : CONTENT_ITEMS_OTF_FONTS;
 
   if (addCover) {
     contentItems += CONTENT_ITEMS_COVER;
@@ -75,8 +81,15 @@ function removeUnnecesaryFiles(
   path: string,
   addCover: boolean,
   addTitlePage: boolean,
-  addPublicDomain: boolean
+  addPublicDomain: boolean,
+  epub: boolean
 ): void {
+  if (epub) {
+    fs.rmSync(`${path}/fonts/TASAOrbiterText-Regular.otf`, { force: true });
+  } else {
+    fs.rmSync(`${path}/fonts/TASAOrbiterVF.woff2`, { force: true });
+  }
+
   if (!addCover) {
     fs.rmSync(`${path}/text/cover.xhtml`, { force: true });
     fs.rmSync(`${path}/css/pdl/cover.css`, { force: true });
@@ -102,7 +115,10 @@ export function checkAddablePages(
   const { "PD - Title": publicDomainTitle, "PD - Text": publicDomainText } =
     book;
   const AddablePages = {} as AddablePages;
-  for (const [source, path] of Object.entries(sources)) {
+  for (const [source, path] of Object.entries(sources) as [
+    BookTypes,
+    string,
+  ][]) {
     const addCover = fs.existsSync(`${path}${COVER_NAME}`);
     const addTitle = fs.existsSync(`${path}${TITLE_NAME}`);
     const addPublicDomain = !!publicDomainTitle || !!publicDomainText;
@@ -110,10 +126,17 @@ export function checkAddablePages(
     const { contentItems, contentItemRefs } = getContent(
       addPublicDomain,
       addCover,
-      addTitle
+      addTitle,
+      source
     );
 
-    removeUnnecesaryFiles(path, addCover, addTitle, addPublicDomain);
+    removeUnnecesaryFiles(
+      path,
+      addCover,
+      addTitle,
+      addPublicDomain,
+      source === "epub"
+    );
 
     AddablePages[source as BookTypes] = {
       toc,

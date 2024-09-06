@@ -2,7 +2,7 @@ import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import logger from "~logger";
 
-const execPromise = promisify(exec);
+export const execPromise = promisify(exec);
 
 export async function runCommand(command: string): Promise<void> {
   try {

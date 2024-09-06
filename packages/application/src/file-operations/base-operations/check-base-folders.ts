@@ -6,8 +6,10 @@ import {
   GIT_BOOK_SOURCES_FOLDER_PATH,
   TITLE_FOLDER_PATH,
 } from "~constants";
+import { execPromise } from "~helpers";
+import logger from "~logger";
 
-export function checkFilesystem(): void {
+export async function checkFilesystem(): Promise<void> {
   const folders = [
     BOOKS_FOLDER_PATH,
     GIT_BOOK_SOURCES_FOLDER_PATH,
@@ -20,5 +22,13 @@ export function checkFilesystem(): void {
     if (!fs.existsSync(folder)) {
       fs.mkdirSync(folder);
     }
+  });
+
+  await execPromise("calibre --version").catch(() => {
+    logger.error(
+      "Calibre is not installed. Please install Calibre to use the application."
+    );
+
+    process.exit(1);
   });
 }

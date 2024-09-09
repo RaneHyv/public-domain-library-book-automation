@@ -7,6 +7,7 @@ import {
   modifyKepubCss,
   modifyPublicDomainPageContent,
   modifyToc,
+  modifyUrlUtms,
   removeAssets,
 } from "~file-operations";
 import { Book, BookFolders } from "~types";
@@ -51,6 +52,17 @@ export async function modifyBooks(
       azw3: azw3SrcPath,
     },
     addablePages
+  );
+
+  const { Title: title, "Author(s)": authors } = book || {};
+  modifyUrlUtms(
+    {
+      epub: epubSrcPath,
+      kepub: kepubSrcPath,
+      azw3: azw3SrcPath,
+    },
+    title,
+    authors
   );
 
   await modifyPublicDomainPageContent(book, BookPaths);

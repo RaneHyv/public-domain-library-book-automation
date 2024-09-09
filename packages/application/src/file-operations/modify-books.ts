@@ -6,6 +6,7 @@ import {
   modifyCoreCss,
   modifyKepubCss,
   modifyPublicDomainPageContent,
+  modifyTitlePageContent,
   modifyToc,
   modifyUrlUtms,
   removeAssets,
@@ -65,6 +66,7 @@ export async function modifyBooks(
     authors
   );
 
+  await modifyTitlePageContent(book, BookPaths);
   await modifyPublicDomainPageContent(book, BookPaths);
   modifyKepubCss(kepubSrcPath);
   modifyAzw3Css(azw3SrcPath);

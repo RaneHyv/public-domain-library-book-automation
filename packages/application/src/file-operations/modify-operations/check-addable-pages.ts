@@ -1,13 +1,14 @@
 import * as fs from "fs";
 import {
+  CONTENT_ITEM_REFS_COVER,
+  CONTENT_ITEM_REFS_PUBLIC_DOMAIN,
+  CONTENT_ITEM_REFS_TITLE_PAGE,
   CONTENT_ITEMS_COVER,
   CONTENT_ITEMS_OTF_FONTS,
   CONTENT_ITEMS_PUBLIC_DOMAIN,
   CONTENT_ITEMS_TITLE_PAGE,
+  CONTENT_ITEMS_TITLE_PAGE_SVG,
   CONTENT_ITEMS_WOFF_FONTS,
-  CONTENT_ITEM_REFS_COVER,
-  CONTENT_ITEM_REFS_PUBLIC_DOMAIN,
-  CONTENT_ITEM_REFS_TITLE_PAGE,
   COVER_NAME,
   TITLE_NAME,
   TOC_COVER,
@@ -27,6 +28,7 @@ function getContent(
   addPublicDomain: boolean,
   addCover: boolean,
   addTitlePage: boolean,
+  addTitlePageSvg: boolean,
   source: BookTypes
 ): {
   contentItems: string;
@@ -48,6 +50,10 @@ function getContent(
   if (addTitlePage) {
     contentItems += CONTENT_ITEMS_TITLE_PAGE;
     contentItemRefs += CONTENT_ITEM_REFS_TITLE_PAGE;
+  }
+
+  if (addTitlePageSvg) {
+    contentItems += CONTENT_ITEMS_TITLE_PAGE_SVG;
   }
 
   if (addPublicDomain) {
@@ -84,7 +90,8 @@ function removeUnnecesaryFiles(
   addCover: boolean,
   addTitlePage: boolean,
   addPublicDomain: boolean,
-  source: BookTypes
+  source: BookTypes,
+  addTitlePageSvg: boolean
 ): void {
   if (source === "epub") {
     fs.rmSync(`${path}/fonts/TASAOrbiterText-Regular.otf`, { force: true });
@@ -101,6 +108,9 @@ function removeUnnecesaryFiles(
   if (!addTitlePage) {
     fs.rmSync(`${path}/text/titlepage.xhtml`, { force: true });
     fs.rmSync(`${path}/css/pdl/titlepage.css`, { force: true });
+  }
+
+  if (!addTitlePageSvg) {
     fs.rmSync(`${path}${TITLE_NAME}`, { force: true });
   }
 
@@ -114,25 +124,40 @@ export function checkAddablePages(
   book: Book,
   sources: ModificationFolders
 ): AddablePages {
-  const { "PD - Title": publicDomainTitle, "PD - Text": publicDomainText } =
-    book;
+  const {
+    "PD - Title": publicDomainTitle,
+    "PD - Text": publicDomainText,
+    Title: title,
+    "Author(s)": authors,
+  } = book;
+
   const AddablePages = {} as AddablePages;
   for (const [source, path] of Object.entries(sources) as [
     BookTypes,
     string,
   ][]) {
     const addCover = fs.existsSync(`${path}${COVER_NAME}`);
-    const addTitle = fs.existsSync(`${path}${TITLE_NAME}`);
+    const addTitlePageSvg = fs.existsSync(`${path}${TITLE_NAME}`);
+    const addTitlePage = !!(addTitlePageSvg || (title && authors));
     const addPublicDomain = !!publicDomainTitle || !!publicDomainText;
-    const toc = getToc(addCover, addTitle, addPublicDomain);
+
+    const toc = getToc(addCover, addTitlePage, addPublicDomain);
     const { contentItems, contentItemRefs } = getContent(
       addPublicDomain,
       addCover,
-      addTitle,
+      addTitlePage,
+      addTitlePageSvg,
       source
     );
 
-    removeUnnecesaryFiles(path, addCover, addTitle, addPublicDomain, source);
+    removeUnnecesaryFiles(
+      path,
+      addCover,
+      addTitlePage,
+      addPublicDomain,
+      source,
+      addTitlePageSvg
+    );
 
     AddablePages[source as BookTypes] = {
       toc,
@@ -140,7 +165,7 @@ export function checkAddablePages(
       contentItemRefs,
       cover: addCover,
       publicDomain: addPublicDomain,
-      titlePage: addTitle,
+      titlePage: addTitlePage,
     };
   }
 

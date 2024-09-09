@@ -57,6 +57,9 @@ export const CONTENT_ITEMS_COVER = `
 export const CONTENT_ITEMS_TITLE_PAGE = `
   <item href="css/pdl/titlepage.css" id="pdl-titlepage.css" media-type="text/css"/>
   <item href="text/titlepage.xhtml" id="titlepage.xhtml" media-type="application/xhtml+xml"/>
+` as const;
+
+export const CONTENT_ITEMS_TITLE_PAGE_SVG = `
   <item href="images/pdl-title.svg" id="pdl-title.svg" media-type="image/svg+xml"/>
 ` as const;
 

@@ -34,6 +34,17 @@ async function swapTocContent(
     })
     .remove();
 
+  const landmarks = $("#landmarks");
+  const landmarksOl = landmarks.find("ol").first();
+
+  if (landmarksOl) {
+    landmarksOl.prepend(`
+        <li>
+          <a href="/text/titlepage.xhtml" epub:type="titlepage">Titlepage</a>
+        </li>
+      `);
+  }
+
   const html = $.html();
 
   return pretifyData(html, "html", true);

@@ -47,6 +47,19 @@ async function adjustContentFile(
 
   const manifestHtml = $.html("manifest");
   const spineHtml = $.html("spine");
+  const packageHtml = $.html("package");
+  const guideHtml = $("guide");
+
+  if (packageHtml.includes("<guide>")) {
+    guideHtml.prepend(`
+      <reference type="start" title="Titlepage" href="text/titlepage.xhtml" />
+    `);
+  } else {
+    const newGuide = `<guide>
+        <reference type="start" title="Titlepage" href="text/titlepage.xhtml" />
+      </guide>`;
+    $("package").append(newGuide);
+  }
 
   const formattedManifestHtml = await pretifyData(manifestHtml, "xml");
   const formattedSpineHtml = await pretifyData(spineHtml, "xml");

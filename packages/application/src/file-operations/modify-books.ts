@@ -6,6 +6,7 @@ import {
   modifyCoreCss,
   modifyKepubCss,
   modifyPublicDomainPageContent,
+  modifySvgCss,
   modifyTitlePageContent,
   modifyToc,
   modifyUrlUtms,
@@ -68,6 +69,12 @@ export async function modifyBooks(
 
   await modifyTitlePageContent(book, BookPaths);
   await modifyPublicDomainPageContent(book, BookPaths);
+  await modifySvgCss({
+    epub: epubSrcPath,
+    kepub: kepubSrcPath,
+    azw3: azw3SrcPath,
+  });
+
   modifyKepubCss(kepubSrcPath);
   modifyAzw3Css(azw3SrcPath);
 }

@@ -4,6 +4,7 @@ export * from "./check-addable-pages";
 export * from "./content";
 export * from "./core-css";
 export * from "./kepub-css";
+export * from "./modify-svg-css";
 export * from "./modify-url-utms";
 export * from "./public-domain-page-content";
 export * from "./remove-assets";

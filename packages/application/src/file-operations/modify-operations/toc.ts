@@ -36,7 +36,7 @@ async function swapTocContent(
 
   const html = $.html();
 
-  return pretifyData(html, "html");
+  return pretifyData(html, "html", true);
 }
 
 export async function modifyToc(

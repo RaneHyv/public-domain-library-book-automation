@@ -5,6 +5,16 @@ import { pretifyData } from "~helpers";
 import type { Book, BookFolders } from "~types";
 import { readFile, writeFile } from "../helpers";
 
+function increaseFontSize(path: string, title: string): void {
+  if (fs.existsSync(path) && title && title.length <= 25) {
+    let data = readFile(path);
+    data = data.replaceAll("font-size: 4.75rem;", "font-size: 5.6rem;");
+    data = data.replaceAll("font-size: 2rem;", "font-size: 2.3rem;");
+
+    writeFile(path, data);
+  }
+}
+
 export async function modifyTitlePageContent(
   book: Book,
   BookPaths: BookFolders
@@ -19,6 +29,7 @@ export async function modifyTitlePageContent(
   for (const srcPath of [azw3, epub, kepub]) {
     const svgPath = `${srcPath}/epub${TITLE_NAME}`;
     const path = `${srcPath}/epub/text/titlepage.xhtml`;
+    const cssPath = `${srcPath}/epub/css/pdl/titlepage.css`;
     if (!fs.existsSync(path)) {
       continue;
     }
@@ -45,6 +56,8 @@ export async function modifyTitlePageContent(
           <h3 id="translator-text">Translated by ${translators}</h3>
         `);
       }
+
+      increaseFontSize(cssPath, title);
     }
 
     const html = $.html();

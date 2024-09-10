@@ -8,12 +8,6 @@
   src: url("../../fonts/LeagueGothic-Regular.ttf") format("truetype");
 }
 
-#titlepage-text-section {
-  text-align: left;
-  text-indent: 0;
-  margin: 1.5rem 0 0 0;
-}
-
 h1,
 h2 {
   font-family: "League Gothic Regular";
@@ -30,20 +24,24 @@ h2 {
   hyphens: auto;
 }
 
+#title-text {
+  margin-top: 2rem;
+}
+
 img.logo-image {
   display: block;
   width: 2.65rem;
   height: auto;
-  margin: 0.8rem 0 0.5rem 0;
+  margin: 0.8rem 0;
 }
 
 h3 {
   font-family: "League Gothic Regular";
-  font-size: 2.3rem;
+  font-size: 2rem;
   line-height: 2rem;
   margin: 0;
   font-weight: 100;
-  margin-top: 3.48rem;
+  margin-top: 3.2rem;
   text-align: left;
   text-indent: 0;
   font-weight: normal;

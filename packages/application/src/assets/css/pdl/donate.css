@@ -15,7 +15,7 @@ p {
   font-weight: 450;
   line-height: 100%;
   margin: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 4.1rem;
   text-align: left;
   text-indent: 0;
   text-transform: none;
@@ -34,12 +34,12 @@ p#second-paragraph {
 }
 
 #large-pdl-logo {
-  width: 15rem;
+  width: 25rem;
   height: auto;
 }
 
 #large-logo-container {
-  margin-top: 3rem;
+  margin-top: 5.25rem;
   margin-left: 0;
 }
 

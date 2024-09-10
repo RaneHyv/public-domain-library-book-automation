@@ -52,12 +52,14 @@ async function adjustContentFile(
 
   if (packageHtml.includes("<guide>")) {
     guideHtml.prepend(`
-      <reference type="start" title="Titlepage" href="text/titlepage.xhtml" />
+      <reference type="text" title="Start" href="text/titlepage.xhtml" />
     `);
   } else {
-    const newGuide = `<guide>
-        <reference type="start" title="Titlepage" href="text/titlepage.xhtml" />
-      </guide>`;
+    const newGuide = `
+    <guide>
+      <reference type="text" title="Start" href="text/titlepage.xhtml" />
+    </guide>
+    `;
     $("package").append(newGuide);
   }
 

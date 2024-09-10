@@ -33,9 +33,7 @@ export async function modifyPublicDomainPageContent(
 
     if (publicDomaiPageContent) {
       const contentContainer = $("#public-domain-page-content");
-      contentContainer.append(
-        `<p>${publicDomaiPageContent.split("\\n").join(`</p><br /><p>`)}</p>`
-      );
+      contentContainer.append(`${publicDomaiPageContent}`);
     }
 
     const html = $.html();

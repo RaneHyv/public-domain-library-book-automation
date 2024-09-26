@@ -11,6 +11,7 @@ import {
   modifyToc,
   modifyUrlUtms,
   removeAssets,
+  removeMentions,
 } from "~file-operations";
 import { Book, BookFolders } from "~types";
 
@@ -26,6 +27,7 @@ export async function modifyBooks(
   const kepubSrcPath = `${kepub}/epub`;
 
   removeAssets(azw3SrcPath, epubSrcPath, kepubSrcPath);
+  removeMentions(azw3SrcPath, epubSrcPath, kepubSrcPath);
   addAssets(azw3SrcPath, epubSrcPath, kepubSrcPath, book, name);
   modifyCoreCss({
     epub: epubSrcPath,

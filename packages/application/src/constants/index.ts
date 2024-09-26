@@ -1,3 +1,4 @@
+export * from "./basic.const";
 export * from "./content.const";
 export * from "./core-css.const";
 export * from "./kepub-img-const";

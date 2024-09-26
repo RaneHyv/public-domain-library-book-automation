@@ -3,6 +3,7 @@ import * as fs from "fs";
 import {
   ADDED_ITEMS,
   ADDED_ITEM_REFS_BACK,
+  CURRENT_DATE,
   REMOVED_ITEMS_IDS,
   REMOVED_ITEM_ID_REFS,
 } from "~constants";
@@ -78,7 +79,6 @@ function modifyMetaData(contentOpf: string, bookUrl: string): string {
 
   const pdlText = "Public Domain Library";
   const regex = /<a href="(?<url>[^&]+)">/gu;
-  const currentDate = `${new Date().toISOString().split("T")[0]}T00:00:00Z`;
   $("package").removeAttr("prefix");
   const metadata = $("metadata");
   const meta = metadata.children("meta");
@@ -110,11 +110,16 @@ function modifyMetaData(contentOpf: string, bookUrl: string): string {
     ) {
       metaTag.text("https://publicdomainlibrary.org");
     } else if (metaText && metaText === date) {
-      metaTag.text(currentDate);
+      metaTag.text(CURRENT_DATE);
+    }
+
+    if (metaProperty && metaProperty.includes("se:")) {
+      const updatedMetaProperty = metaProperty.replace("se:", "pdl:");
+      metaTag.attr("property", updatedMetaProperty);
     }
   });
 
-  metadata.children("dc\\:date").first().text(currentDate);
+  metadata.children("dc\\:date").first().text(CURRENT_DATE);
   const html = $.html();
 
   return removeSingleEmptyLines(html);

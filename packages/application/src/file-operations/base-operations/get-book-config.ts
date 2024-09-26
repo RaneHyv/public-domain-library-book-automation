@@ -1,24 +1,38 @@
+import * as csv from "csv-parser";
 import * as fs from "fs";
 import * as path from "path";
-import { BOOKS_JSON } from "~constants";
+import { BOOKS_CSV } from "~constants";
 import type { Books } from "~types";
 
-export function getBookConfigs(): Books {
-  const bookConfigPath = path.join("./books", BOOKS_JSON);
+async function readCsvAndFormatToJson(csvFilePath: string): Promise<unknown[]> {
+  return new Promise((resolve, reject) => {
+    const results: unknown[] = [];
+
+    fs.createReadStream(csvFilePath)
+      .pipe(csv())
+      .on("data", (data) => results.push(data))
+      .on("end", () => {
+        resolve(results);
+      })
+      .on("error", (error) => {
+        reject(error);
+      });
+  });
+}
+
+export async function getBookConfigs(): Promise<Books> {
+  const bookConfigPath = path.join("./books", BOOKS_CSV);
   if (!fs.existsSync(bookConfigPath)) {
     throw new Error(
-      `The '${BOOKS_JSON}' file is missing in the '${bookConfigPath}' folder.`
+      `The '${BOOKS_CSV}' file is missing in the '${bookConfigPath}' folder.`
     );
   }
 
-  const content = fs.readFileSync(bookConfigPath, "utf-8");
-  const config = JSON.parse(content) as { books: Books };
+  const config = (await readCsvAndFormatToJson(bookConfigPath)) as Books;
 
-  if (!config.books) {
-    throw new Error(
-      `The '${BOOKS_JSON}' file is missing the 'books' property.`
-    );
+  if (!config) {
+    throw new Error(`The '${BOOKS_CSV}' file is missing the 'books' property.`);
   }
 
-  return config.books;
+  return config;
 }

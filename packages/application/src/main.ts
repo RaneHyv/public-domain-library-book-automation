@@ -16,10 +16,10 @@ const GENERAL_TAG = "General" as const;
 
 async function processBook(book: Book) {
   try {
-    const { Title: title, "Author(s)": author, ID } = book;
+    const { Title: title, "Author(s)": author, ID, "PDL book": bookUrl } = book;
     const bookFileName = createBookFileName(title, author, ID);
     const bookPaths = await getBooks(book, bookFileName);
-    await modifyBooks(book, bookPaths, bookFileName);
+    await modifyBooks(book, bookPaths, bookFileName, bookUrl);
     await Promise.all([
       epubBuild(bookPaths.epub, bookFileName, ID),
       kepubBuild(bookPaths.kepub, bookFileName, ID),
@@ -36,7 +36,7 @@ async function BookCreationProcess() {
 
   try {
     checkFilesystem();
-    const books = getBookConfigs();
+    const books = await getBookConfigs();
     await Promise.all(books.map((book) => processBook(book)));
   } catch (error: unknown) {
     logger.error((error as Error).message, { ID: GENERAL_TAG });

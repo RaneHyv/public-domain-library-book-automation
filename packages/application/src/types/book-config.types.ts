@@ -1,7 +1,12 @@
 export type BookConfigFileKeys =
+  | "Amazon"
+  | "Apple"
   | "Author(s)"
+  | "Color"
   | "ID"
-  | "Lang"
+  | "Kobo"
+  | "Lan"
+  | "Notes"
   | "PD - Text"
   | "PD - Title"
   | "PDL Author"

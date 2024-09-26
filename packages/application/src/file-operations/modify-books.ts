@@ -17,7 +17,8 @@ import { Book, BookFolders } from "~types";
 export async function modifyBooks(
   book: Book,
   BookPaths: BookFolders,
-  name: string
+  name: string,
+  bookUrl: string
 ): Promise<void> {
   const { azw3, epub, kepub } = BookPaths;
   const azw3SrcPath = `${azw3}/epub`;
@@ -53,7 +54,8 @@ export async function modifyBooks(
       kepub: kepubSrcPath,
       azw3: azw3SrcPath,
     },
-    addablePages
+    addablePages,
+    bookUrl
   );
 
   const { Title: title, "Author(s)": authors } = book || {};

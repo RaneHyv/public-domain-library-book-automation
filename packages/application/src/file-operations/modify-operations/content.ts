@@ -73,9 +73,57 @@ async function adjustContentFile(
   return removeSingleEmptyLines(html);
 }
 
+function modifyMetaData(contentOpf: string, bookUrl: string): string {
+  const $ = cheerio.load(contentOpf, { xml: true });
+
+  const pdlText = "Public Domain Library";
+  const regex = /<a href="(?<url>[^&]+)">/gu;
+  const currentDate = `${new Date().toISOString().split("T")[0]}T00:00:00Z`;
+  $("package").removeAttr("prefix");
+  const metadata = $("metadata");
+  const meta = metadata.children("meta");
+  const date = metadata.children("dc\\:date").first().text();
+
+  metadata.children("dc\\:publisher").first().text(pdlText);
+  metadata.children("dc\\:identifier").first().text(`url:${bookUrl}`);
+
+  meta.each((index, element) => {
+    const metaTag = $(element);
+    const metaText = metaTag.text();
+    const metaProperty = metaTag.attr("property");
+
+    if (metaProperty?.trim().toLocaleLowerCase() === "se:url.vcs.github") {
+      metaTag.remove();
+    } else if (
+      metaProperty?.trim().toLocaleLowerCase() === "se:long-description"
+    ) {
+      const updatedMetaText = metaText.replace(regex, `<a href="${bookUrl}">`);
+      metaTag.text(updatedMetaText);
+    } else if (
+      metaText &&
+      metaText.trim().toLocaleLowerCase() === "standard ebooks"
+    ) {
+      metaTag.text(pdlText);
+    } else if (
+      metaText &&
+      metaText.trim().toLocaleLowerCase() === "https://standardebooks.org"
+    ) {
+      metaTag.text("https://publicdomainlibrary.org");
+    } else if (metaText && metaText === date) {
+      metaTag.text(currentDate);
+    }
+  });
+
+  metadata.children("dc\\:date").first().text(currentDate);
+  const html = $.html();
+
+  return removeSingleEmptyLines(html);
+}
+
 export async function modifyContent(
   modInfo: ModificationFolders,
-  addablePages: AddablePages
+  addablePages: AddablePages,
+  bookUrl: string
 ): Promise<void> {
   for (const [source, path] of Object.entries(modInfo) as [
     BookTypes,
@@ -85,7 +133,8 @@ export async function modifyContent(
     if (path && fs.existsSync(contentOpfPath)) {
       const opfData = readFile(contentOpfPath);
       const newOpf = await adjustContentFile(opfData, addablePages[source]);
-      writeFile(contentOpfPath, newOpf);
+      const metaFixedOpf = modifyMetaData(newOpf, bookUrl);
+      writeFile(contentOpfPath, metaFixedOpf);
     }
   }
 }
